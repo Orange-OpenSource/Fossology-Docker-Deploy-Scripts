@@ -1,0 +1,33 @@
+<VirtualHost *:80>
+ServerName fossology.fqdn
+Alias /repo /usr/local/share/fossology/www/ui
+
+<Directory "/usr/local/share/fossology/www/ui">
+        AllowOverride None
+        Options FollowSymLinks MultiViews
+
+        AuthLDAPBindDN ""
+        AuthLDAPBindPassword ""
+
+        AuthType Basic
+        AuthName "AD Credentials"
+        AuthBasicProvider ldap
+        AuthLDAPDereferenceAliases never
+        LDAPReferrals off
+        AuthLDAPUrl "ldap://..." NONE
+        AuthLDAPGroupAttributeIsDN on
+        AuthLDAPGroupAttribute member
+        AuthLDAPMaxSubGroupDepth 1
+        Require valid-user
+        AuthUserFile /dev/null
+
+        php_flag display_errors on
+        php_value error_reporting 2039
+
+</Directory>
+
+ErrorLog /var/log/apache2/error.fossology.local.log
+CustomLog /var/log/apache2/access.fossology.local.log combined
+
+</VirtualHost>
+

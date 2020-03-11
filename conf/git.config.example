@@ -1,0 +1,7 @@
+[http]
+    proxy = ""
+[http "https://github.com/"]
+    proxy = ""
+[http "https://gitlab.com/"]
+    proxy = ""
+

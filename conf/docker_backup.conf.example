@@ -1,0 +1,54 @@
+#######################################
+# Enable Backup
+docker_backup_enable=true
+
+#######################################
+# Configuration backup
+
+# Destination dir for "secret" backup dir
+docker_backup_conf_dest_dir=
+
+# Keep n newest archive files, olders are removed
+# Use Zero to keep all archives
+docker_backup_conf_old_archives_count=3
+
+#######################################
+# Repository backup
+
+# Destination dir for repository backups
+docker_backup_repo_dest_dir=
+
+# Keep n newest archive files, olders are removed
+# Use Zero to keep all archives
+docker_backup_repo_old_archives_count=3
+
+#######################################
+# Database backup
+#
+# Destination dir for database backups
+docker_backup_db_dest_dir=
+
+# Fossology DB password for user 'fossy'
+docker_backup_db_password=
+
+# Keep n newest DB archive files, olders are removed
+# Use Zero to keep all archives
+docker_backup_db_old_archives_count=3
+
+#######################################
+# Host machine Crontab configuration
+#
+# Enable scheduled backup
+docker_backup_crontab_enable=false
+
+# Crontab prefix - excluding last field with actual command
+docker_backup_crontab_entry_prefix="0 6 * * *"
+
+#######################################
+# Post-backup hook
+#
+# Command executed separately for DB and repository backups:
+# > $hook repository repository-backup-file.tgz
+# > $hook database db-backup-file.tgz
+docker_backup_hook=
+

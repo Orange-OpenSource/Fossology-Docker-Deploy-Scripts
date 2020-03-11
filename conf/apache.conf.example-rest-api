@@ -1,0 +1,81 @@
+# To allow bearer (aka token) authentication for the REST API, 
+# we need to find a way to circumvent the Basic 
+# authentication specifically for the REST API URLs.
+#
+# To achieve that, we change the API URL such that
+# - WEB URL     : https://fossology.fqdn/repo
+# - REST API URL: https://fossology.fqdn/api
+#
+# The REST API URL is proxied to port 8880,
+# which is served by a separate Virtual Host, 
+# configured without Basic authentication.
+#
+# /!\ The Web container must be able to resolve 
+# \!/ the FQDN locally (here, to IP 127.0.1.1)
+#
+# Required apache modules:
+# - REST AIP: proxy_http
+# - Authentication: ldap + authnz_ldap
+
+
+Listen 8880
+
+<VirtualHost *:80>
+
+	ServerName <fqdn>
+	Alias /repo /usr/local/share/fossology/www/ui
+
+	<Location "/api">
+	    ProxyPass http://<fqdn>:8880/repo/api
+	    ProxyPassReverse http://<fqdn>:8880/repo/api
+	</Location>
+
+	<Location "/repo">
+	    Options Indexes FollowSymLinks MultiViews ExecCGI
+	    AllowOverride None
+	    Order allow,deny
+	    allow from all
+
+	    AuthLDAPBindDN ""
+	    AuthLDAPBindPassword ""
+
+	    AuthType Basic
+	    AuthName "Blah blah Credentials"
+	    AuthBasicProvider ldap
+	    AuthLDAPDereferenceAliases never
+	    LDAPReferrals off
+	    AuthLDAPUrl "ldap://..." NONE
+	    AuthLDAPGroupAttributeIsDN on
+	    AuthLDAPGroupAttribute member
+	    AuthLDAPMaxSubGroupDepth 1
+	    Require valid-user
+	    AuthUserFile /dev/null
+		require valid-user
+
+	    php_flag display_errors on
+	    php_value error_reporting 2039
+
+</Location>
+
+
+ErrorLog /var/log/apache2/error.fossology.local.log
+CustomLog /var/log/apache2/access.fossology.local.log combined
+
+</VirtualHost>
+
+<VirtualHost 127.0.1.1:8880>
+
+	ServerName <fqdn>
+	Alias /repo /usr/local/share/fossology/www/ui
+
+	<Location "/repo">
+	    Options Indexes FollowSymLinks MultiViews ExecCGI
+	    AllowOverride None
+	    Order allow,deny
+	    allow from all
+
+	    php_flag display_errors on
+	    php_value error_reporting 2039
+	</Location>
+
+</VirtualHost>

@@ -1,0 +1,80 @@
+#######################################
+# Environment: MANDATORY
+# Choose either: preproduction / production
+fossology_environment=production
+
+#######################################
+# General configuration
+default_docker_image="registry.fqdn/fossology:latest"
+
+#######################################
+# General configuration
+fossology_banner_text="Deployed: $(date)"
+apache_conf_file="conf/apache-fossology...conf"
+
+# /etc/hosts appendix
+# copies the content of the following file at the end of 
+# the /etc/hosts inside the fossology_web container
+add_to_etc_hosts="conf/web_etc_hosts.conf"
+
+#######################################
+# Apache Configuration
+
+# Enable LDAP Apache modules & conf
+auth_ldap_enable="false"
+
+# Enable Shibboleth Apache module & conf
+auth_shibboleth_enable="false"
+auth_shibboleth_configuration_directory="conf/shibboleth-conf"
+
+# Enable External Authentication feature in Fossology
+CONF_EXT_AUTH_ENABLE="false"
+# Environment variables where the Apache authentication
+# module stores the information
+CONF_EXT_AUTH_ENV_USER="LDAP_BINDASUSER"
+CONF_EXT_AUTH_ENV_MAIL="..."
+CONF_EXT_AUTH_ENV_DESC="..."
+# Force username to lowercase
+CONF_EXT_AUTH_ENV_LOWERCASE_USER="true"
+# Should a new user be automatically on first login via External Authentication ?
+CONF_EXT_AUTH_NEW_USER_AUTO_CREATE="true"
+# Default list of the agents associated to automatically created users
+CONF_EXT_AUTH_NEW_USER_AGENT_LIST="agent_copyright,agent_keyword,agent_mimetype,agent_monk,agent_nomos,agent_ojo,agent_shagent"
+
+
+#######################################
+# Apache SSL configuration
+# If exists, will be copied to /etc/ssl/certs/
+# Refer to this file in the Apache SSL configuration
+ETC_SSL_CERTIFICATE="conf/apache-https-certificates/<...>.crt"
+# If exists, will be copied to /etc/ssl/private/
+# Refer to this file in the Apache SSL configuration
+ETC_SSL_PRIVATE_KEY="conf/apache-https-certificates/<...>.key"
+
+#######################################
+# Configure SMTP in database
+
+# Enable SMTP configuration
+smtp_enable=false
+
+# The SSL verification for connection is required?
+# S -> Strict
+# I -> Ignore
+# W -> Warn
+SMTPSslVerify="S"
+# Use TLS connection for SMTP?
+# 1 -> Yes
+# 2 -> No
+SMTPStartTls="1"
+# The domain to be used to send emails.
+SMTPHostName="smtp.domain.com"
+# Password used for SMTP login.
+SMTPAuthPasswd="..."
+# Algorithm to use for login
+# Login => Encrypted
+# None => No authentication
+# Plain => Send as plain text
+SMTPAuth="Login"
+SMTPPort="25"
+# Email to be used for login in SMTP and for from address.
+SMTPAuthUser="user@domain.com"

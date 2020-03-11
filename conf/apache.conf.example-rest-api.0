@@ -1,0 +1,85 @@
+# To allow bearer (aka token) authentication for the REST API, 
+# we need to find a way to circumvent the Basic 
+# authentication specifically for the REST API URLs.
+#
+# To achieve that, we change the API URL such that
+# - WEB URL     : https://fossology.fqdn/repo
+# - REST API URL: https://fossology.fqdn/api
+#
+# The REST API URL is proxied to port 8880,
+# which is served by a separate Virtual Host, 
+# configured without Basic authentication.
+#
+# /!\ In docker, port 8880 must also be exposed.
+#
+# Required apache modules:
+# - REST AIP: proxy_http
+# - Authentication: ldap + authnz_ldap
+
+Listen 8880
+
+<VirtualHost *:80>
+ServerName fossology.orange.fqdn
+Redirect permanent / https://fossology.orange.fqdn/
+</VirtualHost> 
+
+
+<VirtualHost *:443>
+
+	ServerName fossology.orange.fqdn:443
+	Alias /repo /usr/local/share/fossology/www/ui
+
+	ErrorLog /var/log/apache2/error.fossology.local.log
+	CustomLog /var/log/apache2/access.fossology.local.log combined
+
+	SSLEngine on
+	#SSLCertificateFile /etc/ssl/certs/<...>.crt
+	#SSLCertificateKeyFile /etc/ssl/private/<...>.key
+	#SSLCertificateChainFile #TODO
+
+	<Location "/api">
+		ProxyPass http://fossology.orange.fqdn:8880/repo/api
+		ProxyPassReverse http://fossology.orange.fqdn:8880/repo/api
+	</Location>
+
+	<Location "/repo">
+        AllowOverride None
+        Options FollowSymLinks MultiViews
+
+        AuthLDAPBindDN ""
+        AuthLDAPBindPassword ""
+
+        AuthType Basic
+        AuthName "AD-SUBS Credentials"
+        AuthBasicProvider ldap
+        AuthLDAPDereferenceAliases never
+        LDAPReferrals off
+        AuthLDAPUrl "ldap://..." NONE
+        AuthLDAPGroupAttributeIsDN on
+        AuthLDAPGroupAttribute member
+        AuthLDAPMaxSubGroupDepth 1
+        Require valid-user
+        AuthUserFile /dev/null
+
+        php_flag display_errors on
+        php_value error_reporting 2039
+	</Location>
+</VirtualHost>
+
+<VirtualHost *:8880>
+
+	ServerName fossology.orange.fqdn:8880
+	Alias /repo /usr/local/share/fossology/www/ui
+
+	ErrorLog /var/log/apache2/error.fossology.local.log
+	CustomLog /var/log/apache2/access.fossology.local.log combined
+
+	<Location "/repo">
+        AllowOverride None
+        Options FollowSymLinks MultiViews
+
+        php_flag display_errors on
+        php_value error_reporting 2039
+	</Location>
+</VirtualHost>
+

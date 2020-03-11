@@ -1,0 +1,38 @@
+#!/bin/sh -e
+#
+# Software Name : Fossology Docker Deploy Scripts Suite
+# Version: 1.0
+# Copyright (c) 2020 Orange
+# SPDX-License-Identifier: MIT
+#
+# This software is distributed under the MIT License
+# the text of which is available at https://spdx.org/licenses/MIT.html
+# or see the "LICENSE" file for more details.
+#
+# Author: Nicolas Toussaint nicolas1.toussaint@orange.com
+#
+
+# Example script that sends backup files to a 
+# remote server via ssh
+
+target="1.1.1.1:/data/backup_fossology"
+
+case $1 in
+    repository) dest="fossology_repository.tgz" ;;
+    database) dest="fossology_database.tgz" ;;
+    *) 
+        echo "Wrong argument."
+        exit 1
+        ;;
+esac
+
+if [ ! -r "$2" ]
+then
+    echo "Cannot find file '$2'"
+    exit 1
+fi
+
+set -x
+# scp $2 $target/$dest
+set +x
+
