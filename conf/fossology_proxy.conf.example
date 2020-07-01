@@ -1,4 +1,4 @@
 http_proxy=""
 https_proxy=""
 no_proxy=""
-#no_proxy="127.0.0.1, localhost, *.domain.com, 192.168.1.10, domain.com:8080"
+#no_proxy="127.0.0.1, localhost, *.gnacgnac.com, 192.168.1.10, domain.com:8080"

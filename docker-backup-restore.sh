@@ -28,6 +28,7 @@
 #
 
 . $(dirname $0)/setup-common.sh
+log_date="true"
 
 cont_db=fossology_db_1
 cont_sched=fossology_scheduler_1

@@ -17,11 +17,13 @@
 # This file contains common functions to all feature scripts
 
 
-proxy_conf=./conf/fossology_proxy.conf
+proxy_conf=$(dirname $0)/conf/fossology_proxy.conf
 conf_file=$(dirname $0)/conf/deploy.conf
+log_date=false # override in calling scripts
 
 f_log() {
     local _logger=false
+    local _date=""
     for a in "$@"
     do
         case "$1" in
@@ -30,12 +32,13 @@ f_log() {
             shift ;;
         -l)
             _logger=true
+            [ $log_date = "true" ] && _date="$(date '+%Y-%m-%d %H:%M:%S') *** "
             shift ;;
         *) break;;
         esac
     done
 
-    echo "*** $*"
+    echo "*** ${_date}$*"
     [ "$_logger" = "true" ] && logger "$(basename $0): $*"
 }
 

@@ -6,6 +6,7 @@ fossology_environment=production
 #######################################
 # General configuration
 default_docker_image="registry.fqdn/fossology:latest"
+docker_compose_download_url="https://github.com/fossology/fossology/raw/master/docker-compose.yml"
 
 #######################################
 # General configuration

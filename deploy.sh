@@ -45,8 +45,20 @@ done
 which docker-compose >/dev/null 2>&1 || \
     f_fatal "docker-compose is missing. See https://docs.docker.com/compose/install/"
 
-[ -f "$_compose_file" ] || \
-    f_fatal "File `docker-compose.yml`is missing."
+if [ -f "$_compose_file" ]
+then
+    f_log "Docker-Compose: Using local file '$_compose_file'"
+else
+    if [ -n "$docker_compose_download_url" ]
+    then
+        f_log "Download file '$_compose_file' from: '$docker_compose_download_url'"
+        wget $docker_compose_download_url || f_fatal "Failed to download '$_compose_file'"
+    else
+        f_fatal "File 'docker-compose.yml' is missing, no URL configured to download it"
+    fi
+fi
+[ -f "$_compose_file" ] || f_fatal "Bug: File  'docker-compose.yml' is missing."
+
 
 f_log -s "Deploy Fossology containers"
 docker_image="$1"

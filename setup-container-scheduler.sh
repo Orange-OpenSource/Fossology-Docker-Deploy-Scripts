@@ -1,4 +1,5 @@
 #!/bin/sh
+
 #
 # Software Name : Fossology Docker Deploy Scripts Suite
 # Version: 1.0
@@ -32,7 +33,11 @@ git_conf=conf/git.config
 if [ -r "$git_conf" ]
 then
     f_log "Update GIT configuration"
+    # /!\ Not sure if something changed recently, but the home folder
+    #     for user 'fossy' seems to have momved from
+    #     /srv/fossology to /home/fossy/
     docker cp $git_conf $docker_container:/srv/fossology/.gitconfig || f_fatal
+    docker cp $git_conf $docker_container:/home/fossy/.gitconfig || f_fatal
 fi
 echo
 
@@ -73,7 +78,9 @@ then
     docker exec -u root $docker_container service fossology restart
     # Exit code 137 means that the container was stopped 
     # Expected behaviour since we asked it to restart
+    # It may be that the service was not running yet, and is therefore not stopped
+    # in which case exit code 0 is acceptble too
     ret=$?
-    [ $ret -eq 137 ] || f_fatal "Fossology service restart with exit code $ret"
+    [ $ret -eq 137 -o $ret -eq 0 ] || f_fatal "Fossology service restart with exit code $ret"
 fi
 exit 0

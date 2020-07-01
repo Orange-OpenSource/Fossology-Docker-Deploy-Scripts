@@ -11,6 +11,7 @@
 #
 # Author: Nicolas Toussaint nicolas1.toussaint@orange.com
 #
+#
 # This file deletes ALL Docker containers and volumes.
 # Only works if configured as a pre-productino environment in 
 #  the configuration file.
@@ -28,19 +29,22 @@ then
     exit 1
 fi
 
+filter="-f name=fossology*"
+#dry=echo
+
 echo "* Stopping containers"
-docker container ls -aq | xargs docker container stop
+docker container ls -q $filter | xargs $dry docker container stop
 echo "* Pruning containers"
-docker container prune -f
+docker container ls -aq $filter | xargs $dry docker container prune -f
 echo "* Pruning volumes"
-docker volume prune -f
+docker volume ls -q $filter | xargs $dry docker volume prune -f
 
 echo "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --"
 echo "Containers:"
-docker container ls -a
+docker container ls $filter
 echo
 echo "Volumes:"
-docker volume ls
+docker volume ls $filter
 echo
 echo "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --"
 

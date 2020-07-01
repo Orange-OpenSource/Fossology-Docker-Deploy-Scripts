@@ -35,6 +35,18 @@ docker_backup_db_password=
 # Use Zero to keep all archives
 docker_backup_db_old_archives_count=3
 
+
+#######################################
+# Fosdash InfluxDB backup
+#
+# Destination dir for backups
+docker_backup_fossdash_influxdb_dir=
+
+# Keep n newest archive files, olders are removed
+# Use Zero to keep all archives
+docker_backup_fossdash_influxdb_old_archives_count=6
+
+
 #######################################
 # Host machine Crontab configuration
 #

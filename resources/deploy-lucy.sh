@@ -4,10 +4,6 @@
 # Automatic deployment on Lucy service:
 # See: http://lucy1.rd.francetelecom.fr/
 #
-#
-# NOTE: THIS FILE SHOULD NOT BE PUBLISHED
-#
-
 cd $(dirname $0)/..
 
 ip=$(ip a show eth0 | sed -n '/inet/s/.*inet \([0-9\.]*\).*$/\1/p' | tr '.' '-')

@@ -73,7 +73,7 @@ f_log -s "Add home brewed licenses to database"
 #
 # To create CSV license file, add it via the web interface,
 # and then export it to CSV from psql:
-#   \copy (select * from license_ref where rf_shortname = 'Orange-Proprietary') \
+#   \copy (select * from license_ref where rf_shortname = 'My-Proprietary-License') \
 #    to /tmp/out.csv with csv
 #
 
